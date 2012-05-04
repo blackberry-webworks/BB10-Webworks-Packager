@@ -378,4 +378,67 @@ describe("xml parser", function () {
             configParser.parse(configPath, session, {});
         }).toThrow(localize.translate("EXCEPTION_INVALID_AUTHOR"));
     });
+
+    it("whitespace in splashscreen value gets trimmed", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["rim:splashscreen"] = "\ttest.JPG:blah.JPG\t";
+
+        mockParsing(data);
+
+        expect(function () {
+            configParser.parse(configPath, session, function (configObj) {
+                expect(configObj.splashscreen).toEqual("test.JPG:blah.JPG");
+            });
+        }).not.toThrow();
+    });
+
+    it("allow just landscape splash screen image being specified", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["rim:splashscreen"] = "test.JPG";
+
+        mockParsing(data);
+
+        expect(function () {
+            configParser.parse(configPath, session, function (configObj) {
+                expect(configObj.splashscreen).toEqual("test.JPG");
+            });
+        }).not.toThrow();
+    });
+
+    it("allow just portrait splash screen image being specified", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["rim:splashscreen"] = ":test.JPG";
+
+        mockParsing(data);
+
+        expect(function () {
+            configParser.parse(configPath, session, function (configObj) {
+                expect(configObj.splashscreen).toEqual(":test.JPG");
+            });
+        }).not.toThrow();
+    });
+
+    it("does not throw error when a valid splash screen image is specified", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["rim:splashscreen"] = "test.JPG:anything.png";
+
+        mockParsing(data);
+
+        expect(function () {
+            configParser.parse(configPath, session, function (configObj) {
+                expect(configObj.splashscreen).toEqual("test.JPG:anything.png");
+            });
+        }).not.toThrow();
+    });
+
+    it("throws error when an invalid splash screen image is specified", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["rim:splashscreen"] = "test.png:blah.gif";
+
+        mockParsing(data);
+
+        expect(function () {
+            configParser.parse(configPath, session, function (configObj) {});
+        }).toThrow(localize.translate("EXCEPTION_INVALID_SPLASH_SCREEN_IMG"));
+    });
 });
