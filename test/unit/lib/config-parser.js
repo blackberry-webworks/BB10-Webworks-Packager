@@ -433,6 +433,45 @@ describe("config parser", function () {
         });
     });
     
+    it("sets orientation to landscape when specified", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["rim:orientation"] = {
+            "@": { mode: "landscape" }
+        };
+        
+        mockParsing(data);
+        
+        configParser.parse(configPath, session, function (configObj) {
+            expect(configObj.orientation).toEqual("landscape");
+            expect(configObj.autoOrientation).toEqual(false);
+        });
+    });
+    
+    it("sets orientation to portrait when specified", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["rim:orientation"] = {
+            "@": { mode: "portrait" }
+        };
+        
+        mockParsing(data);
+        
+        configParser.parse(configPath, session, function (configObj) {
+            expect(configObj.orientation).toEqual("portrait");
+            expect(configObj.autoOrientation).toEqual(false);
+        });
+    });
+    
+    it("sets auto orientation to true by default", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        delete data["rim:orientation"];//Remove any orientation data
+        
+        mockParsing(data);
+        
+        configParser.parse(configPath, session, function (configObj) {
+            expect(configObj.autoOrientation).toEqual(true);
+        });
+    });
+    
     it("throws a proper error when author tag is empty", function () {
         var data = testUtilities.cloneObj(testData.xml2jsConfig);
         data.author = {};
