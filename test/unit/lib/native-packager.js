@@ -6,6 +6,7 @@ var path = require("path"),
     srcPath = __dirname + "/../../../lib/",
     nativePkgr = require(srcPath + "/native-packager"),
     pkgrUtils = require(srcPath + "/packager-utils"),
+    testUtilities = require("./test-utilities"),
     testData = require("./test-data"),
     logger = require(srcPath + "logger"),
     localize = require(srcPath + "/localize"),
@@ -124,5 +125,39 @@ describe("Native packager", function () {
         expect(pkgrUtils.writeFile).toHaveBeenCalledWith(session.sourceDir, "blackberry-tablet.xml", bbTabletXML);
         expect(childProcess.spawn).toHaveBeenCalledWith(cmd, ["@options"], {"cwd": session.sourceDir, "env": process.env});
         expect(callback).toHaveBeenCalledWith(0);
+    });
+    
+    it("omits -devMode when signing and specifying -d", function () {
+        var session = testUtilities.cloneObj(testData.session),
+            config = testUtilities.cloneObj(testData.config),
+            target = "device",
+            NL = pkgrUtils.isWindows() ? "\r\n" : "\n",
+            optionsFile = "-package" + NL +
+                "-sign" + NL +
+                "-keystore" + NL +
+                "c:/author.p12" + NL +
+                "-storepass" + NL +
+                "password" + NL +
+                "-buildId" + NL +
+                "100" + NL +
+                "C:\\clones\\packager.test\\device\\Demo.bar" + NL +
+                "-C" + NL +
+                "C:\\clones\\packager.test\\src" + NL +
+                "blackberry-tablet.xml" + NL +
+                "C:\\clones\\packager.test\\src\\abc" + NL +
+                "C:\\clones\\packager.test\\src\\xyz" + NL;
+
+        //Set signing params [-g --buildId]
+        session.keystore = "c:/author.p12";
+        session.storepass = "password";
+        config.buildId = "100";
+        
+        //Set -d param
+        session.debug = "";
+
+        nativePkgr.exec(session, target, config, callback);
+
+        //options file should NOT contain -devMode
+        expect(fs.writeFileSync).toHaveBeenCalledWith(jasmine.any(String), optionsFile);
     });
 });
