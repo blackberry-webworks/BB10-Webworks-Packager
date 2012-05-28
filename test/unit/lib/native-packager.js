@@ -6,7 +6,7 @@ var path = require("path"),
     srcPath = __dirname + "/../../../lib/",
     nativePkgr = require(srcPath + "/native-packager"),
     pkgrUtils = require(srcPath + "/packager-utils"),
-    testUtilities = require("./test-utilities"),
+    testUtils = require("./test-utilities"),
     testData = require("./test-data"),
     logger = require(srcPath + "logger"),
     localize = require(srcPath + "/localize"),
@@ -128,29 +128,34 @@ describe("Native packager", function () {
     });
     
     it("omits -devMode when signing and specifying -d", function () {
-        var session = testUtilities.cloneObj(testData.session),
-            config = testUtilities.cloneObj(testData.config),
+        testUtils.mockResolve(path);
+        
+        var session = testUtils.cloneObj(testData.session),
+            config = testUtils.cloneObj(testData.config),
             target = "device",
             NL = pkgrUtils.isWindows() ? "\r\n" : "\n",
             optionsFile = "-package" + NL +
                 "-sign" + NL +
                 "-keystore" + NL +
-                "c:/author.p12" + NL +
+                path.normalize("c:/author.p12") + NL +
                 "-storepass" + NL +
                 "password" + NL +
                 "-buildId" + NL +
                 "100" + NL +
-                "C:\\clones\\packager.test\\device\\Demo.bar" + NL +
+                path.normalize("c:/device/Demo.bar") + NL +
                 "-C" + NL +
-                "C:\\clones\\packager.test\\src" + NL +
+                path.normalize("c:/src/") + NL +
                 "blackberry-tablet.xml" + NL +
-                "C:\\clones\\packager.test\\src\\abc" + NL +
-                "C:\\clones\\packager.test\\src\\xyz" + NL;
+                path.normalize("c:/src/abc") + NL +
+                path.normalize("c:/src/xyz") + NL;
 
         //Set signing params [-g --buildId]
-        session.keystore = "c:/author.p12";
+        session.keystore = path.normalize("c:/author.p12");
         session.storepass = "password";
         config.buildId = "100";
+        
+        session.barPath = path.normalize("c:/%s/" + "Demo.bar");
+        session.sourceDir = path.normalize("c:/src/");
         
         //Set -d param
         session.debug = "";
