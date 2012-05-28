@@ -23,4 +23,37 @@
         <feature id="blackberry.app" required="true" version="1.0.0.0"/>
         <feature id="blackberry.app.event" required="false" version="2.0.0.0"/>
     </access>
+    <rim:invokeTargets>
+        <invokeTarget invokeType="application" invokeId="com.domain.subdomain.appname.app1">
+            <permissions>
+                <permit>access_shared</permit>
+                <permit>record_audio</permit>
+                <permit>read_geolocation</permit>
+            </permissions>
+            <filters>
+                <filter>
+                    <actions>
+                        <action>bb.action.OPEN</action>
+                        <action>bb.action.SET</action>
+                        <action>bb.action.VIEW</action>
+                    </actions>
+                    <mime-types>
+                        <mime-type>image/*</mime-type>
+                        <mime-type>text/*</mime-type>
+                    </mime-types>
+                    <uris>
+                        <uri>ftp://</uri>
+                        <uri>http://</uri>
+                        <uri>https://</uri>
+                    </uris>
+                    <exts>
+                        <ext>jpg</ext>
+                        <ext>png</ext>
+                        <ext>txt</ext>
+                        <ext>doc</ext>
+                    </exts>
+                </filter>
+            </filters>
+        </invokeTarget>
+    </rim:invokeTargets>
 </widget>
