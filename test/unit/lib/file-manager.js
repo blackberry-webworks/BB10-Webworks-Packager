@@ -94,7 +94,7 @@ describe("File manager", function () {
         expect(packager_utils.copyFile).toHaveBeenCalledWith(deviceSO, soDest);
     });
 
-    it("copyExtension() should throw an error when a specified feature cannot be found in ext folder", function () {
+    it("copyExtension() should log a warning to the console when a specified feature cannot be found in ext folder", function () {
         var session = testData.session,
             accessList = [{
                 uri: "http://www.cnn.com",
@@ -105,10 +105,13 @@ describe("File manager", function () {
                     version: "1.0.0"
                 }]
             }];
-
-        expect(function () {
-            fileMgr.copyExtensions(accessList, session);
-        }).toThrow(new Error("Failed to find feature with id: abc.def.ijk"));
+			
+		spyOn(logger, "warn");
+		
+		fileMgr.copyExtensions(accessList, session);
+		
+		expect(logger.warn).toHaveBeenCalledWith("Failed to find feature with id: abc.def.ijk");
+		
     });
     
     it("throws an error when the client.js file does not exist in ext folder", function () {
