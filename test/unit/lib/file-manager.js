@@ -105,13 +105,13 @@ describe("File manager", function () {
                     version: "1.0.0"
                 }]
             }];
-			
-		spyOn(logger, "warn");
-		
-		fileMgr.copyExtensions(accessList, session);
-		
-		expect(logger.warn).toHaveBeenCalledWith("Failed to find feature with id: abc.def.ijk");
-		
+
+        spyOn(logger, "warn");
+
+        fileMgr.copyExtensions(accessList, session);
+
+        expect(logger.warn).toHaveBeenCalledWith("Failed to find feature with id: abc.def.ijk");
+
     });
     
     it("throws an error when the client.js file does not exist in ext folder", function () {
