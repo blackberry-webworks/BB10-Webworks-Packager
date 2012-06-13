@@ -4,6 +4,7 @@ var srcPath = __dirname + "/../../../lib/",
     localize = require(srcPath + "localize"),
     logger = require(srcPath + "logger"),
     packagerValidator = require(srcPath + "packager-validator"),
+    path = require("path"),
     cmd;
 
 describe("Packager Validator", function () {
@@ -190,4 +191,108 @@ describe("Packager Validator", function () {
         packagerValidator.validateSession(session, configObj);
         expect(logger.warn).toHaveBeenCalledWith(localize.translate("WARNING_SIGNING_PASSWORD_EXPECTED"));
     });
+});
+
+describe("Packager Validator: validateConfig", function () {
+    it("does not remove APIs that do exist from features whitelist", function () {
+        var session = testUtilities.cloneObj(testData.session),
+            configObj = {
+                accessList: [{
+                    features: [{
+                        id: "blackberry.identity",
+                        required: true,
+                        version: "1.0.0.0"
+                    }, {
+                        version: "1.0.0.0",
+                        required: true,
+                        id: "blackberry.event"
+                    }],
+                    uri: "WIDGET_LOCAL",
+                    allowSubDomain: true
+                }]
+            };
+
+        spyOn(path, "existsSync").andCallFake(function () {
+            //since both of these APIs exist, existsSync would return true
+            return true;
+        });
+
+        packagerValidator.validateConfig(session, configObj);
+        //expecting the features list has not changed, since these APIs exist
+        expect(configObj.accessList[0].features.length).toEqual(2);
+        
+
+    });
+
+    it("removes non-existing APIs from features whitelist", function () {
+        var session = testUtilities.cloneObj(testData.session),
+            configObj = {
+                accessList: [{
+                    features: [{
+                        id: "blackberry.identity",
+                        required: true,
+                        version: "1.0.0.0"
+                    }, {
+                        version: "1.0.0.0",
+                        required: true,
+                        id: "abc.def.ijk"
+                    }],
+                    uri: "WIDGET_LOCAL",
+                    allowSubDomain: true
+                }]    
+            };
+
+        spyOn(path, "existsSync").andCallFake(function (dir) {
+            //directory containing "abc" does not exist: existsSync should return false, otherwise true
+            return dir.indexOf("abc") !== -1 ? false : true;
+        });
+
+        packagerValidator.validateConfig(session, configObj);
+        //expecting the features list to have shortened by 1, since one of these APIs does not exist
+        expect(configObj.accessList[0].features.length).toEqual(1);
+
+    });
+
+    it("removes non-existing APIs from accessList with multiple features lists", function () {
+        var session = testUtilities.cloneObj(testData.session),
+        configObj = {
+            accessList: [{
+                features: [{
+                    id: "blackberry.identity",
+                    required: true,
+                    version: "1.0.0.0"
+                }, {
+                    version: "blackberry.app",
+                    required: true,
+                    id: "blackberry.app"
+                }],
+                uri: "WIDGET_LOCAL",
+                allowSubDomain: true
+            }, {
+                features: [{
+                    id: "blackberry.identity",
+                    required: true,
+                    version: "1.0.0.0"
+                }, {
+                    id: "abc.def.ijk",
+                    required: true,
+                    version: "1.0.0.0"
+                }],
+                uri: "www.cnn.com",
+                allowSubDomain: true
+            }]
+        };
+        
+        spyOn(path, "existsSync").andCallFake(function (dir) {
+            //directory containing "abc" does not exist: existsSync should return false, otherwise true
+            return dir.indexOf("abc") !== -1 ? false : true;
+        });
+
+        packagerValidator.validateConfig(session, configObj);
+        //expecting WIDGET_LOCAL features list to have the same length as before
+        expect(configObj.accessList[0].features.length).toEqual(2);
+        //expecting www.cnn.com features list to have shortened by 1 since one of it's APIs does not exist
+        expect(configObj.accessList[1].features.length).toEqual(1);
+    });
+
 });

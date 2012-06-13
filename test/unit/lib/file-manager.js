@@ -110,7 +110,7 @@ describe("File manager", function () {
 
         fileMgr.copyExtensions(accessList, session);
 
-        expect(logger.warn).toHaveBeenCalledWith("Failed to find feature with id: abc.def.ijk");
+        expect(logger.warn).toHaveBeenCalledWith(localize.translate("EXCEPTION_FEATURE_NOT_FOUND", "abc.def.ijk"));
 
     });
     
