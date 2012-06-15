@@ -229,27 +229,32 @@ describe("Packager Validator: validateConfig", function () {
             configObj = {
                 accessList: [{
                     features: [{
-                        id: "blackberry.identity",
-                        required: true,
-                        version: "1.0.0.0"
-                    }, {
                         version: "1.0.0.0",
                         required: true,
                         id: "abc.def.ijk"
+                    }, {
+                        id: "blackberry.identity",
+                        required: true,
+                        version: "1.0.0.0"
                     }],
                     uri: "WIDGET_LOCAL",
                     allowSubDomain: true
                 }]    
             };
 
+
         spyOn(path, "existsSync").andCallFake(function (dir) {
             //directory containing "abc" does not exist: existsSync should return false, otherwise true
             return dir.indexOf("abc") !== -1 ? false : true;
         });
 
+        spyOn(logger, "warn");
+
         packagerValidator.validateConfig(session, configObj);
         //expecting the features list to have shortened by 1, since one of these APIs does not exist
         expect(configObj.accessList[0].features.length).toEqual(1);
+        //expecting warning to be logged to console because API "abc.def.ijk" does not exist"
+        expect(logger.warn).toHaveBeenCalledWith(localize.translate("EXCEPTION_FEATURE_NOT_FOUND", "abc.def.ijk"));
 
     });
 
@@ -282,6 +287,7 @@ describe("Packager Validator: validateConfig", function () {
                 allowSubDomain: true
             }]
         };
+        spyOn(logger, "warn");
         
         spyOn(path, "existsSync").andCallFake(function (dir) {
             //directory containing "abc" does not exist: existsSync should return false, otherwise true
@@ -293,6 +299,8 @@ describe("Packager Validator: validateConfig", function () {
         expect(configObj.accessList[0].features.length).toEqual(2);
         //expecting www.cnn.com features list to have shortened by 1 since one of it's APIs does not exist
         expect(configObj.accessList[1].features.length).toEqual(1);
+        //expecting warning to be logged to console because API "abc.def.ijk" does not exist"
+        expect(logger.warn).toHaveBeenCalledWith(localize.translate("EXCEPTION_FEATURE_NOT_FOUND", "abc.def.ijk"));
     });
 
 });

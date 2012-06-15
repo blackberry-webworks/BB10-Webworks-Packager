@@ -93,26 +93,6 @@ describe("File manager", function () {
         expect(packager_utils.copyFile).toHaveBeenCalledWith(simulatorSO, soDest);
         expect(packager_utils.copyFile).toHaveBeenCalledWith(deviceSO, soDest);
     });
-
-    it("copyExtension() should log a warning to the console when a specified feature cannot be found in ext folder", function () {
-        var session = testData.session,
-            accessList = [{
-                uri: "http://www.cnn.com",
-                allowSubDomain: false,
-                features: [{
-                    id: "abc.def.ijk",
-                    required: true,
-                    version: "1.0.0"
-                }]
-            }];
-
-        spyOn(logger, "warn");
-
-        fileMgr.copyExtensions(accessList, session);
-
-        expect(logger.warn).toHaveBeenCalledWith(localize.translate("EXCEPTION_FEATURE_NOT_FOUND", "abc.def.ijk"));
-
-    });
     
     it("throws an error when the client.js file does not exist in ext folder", function () {
         var session = testData.session,
