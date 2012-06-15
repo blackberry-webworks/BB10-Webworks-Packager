@@ -634,4 +634,114 @@ describe("config parser", function () {
             configParser.parse(configPath, session, function (configObj) {});
         }).toThrow(localize.translate("EXCEPTION_INVOKE_TARGET_MIME_TYPE_INVALID"));
     });
+
+    describe("splash screen", function () {
+        it("not throw error when rim:splashScreens element does not contain any image elements", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:splashScreens"] = {};
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).not.toThrow();
+        });
+
+        it("generates correct widgetConfig when there is just 1 splash screen image", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:splashScreens"] = {
+                "image": "image1.jpg"
+            };
+
+            mockParsing(data);
+
+            configParser.parse(configPath, session, function (configObj) {
+                expect(configObj.splashScreens).toBeDefined();
+                expect(configObj.splashScreens.image).toBeDefined();
+                expect(configObj.splashScreens.image["default"]).toBeDefined();
+                expect(configObj.splashScreens.image["default"].length).toBe(1);
+                configObj.splashScreens.image["default"].forEach(function (img) {
+                    expect(img).toBe("image1.jpg");
+                });
+            });
+        });
+
+        it("generates correct widgetConfig when there are no localized splash screen images", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:splashScreens"] = {
+                "image": ["image1.jpg", "image2.jpg"]
+            };
+
+            mockParsing(data);
+
+            configParser.parse(configPath, session, function (configObj) {
+                expect(configObj.splashScreens).toBeDefined();
+                expect(configObj.splashScreens.image).toBeDefined();
+                expect(configObj.splashScreens.image["default"]).toBeDefined();
+                expect(configObj.splashScreens.image["default"].length).toBe(2);
+                configObj.splashScreens.image["default"].forEach(function (img) {
+                    expect(img).toMatch(/image1\.jpg|image2\.jpg/);
+                });
+            });
+        });
+
+        it("generates correct widgetConfig when there are localized splash screen images", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:splashScreens"] = {
+                "image": [{
+                    "text": {
+                        "@": {
+                            "xml:lang": "fr"
+                        },
+                        "#": "image1.jpg"
+                    }
+                }, {
+                    "text": {
+                        "@": {
+                            "xml:lang": "fr"
+                        },
+                        "#": "image2.jpg"
+                    }
+                }, {
+                    "text": {
+                        "@": {
+                            "xml:lang": "zh-hk"
+                        },
+                        "#": "image3.jpg"
+                    }
+                }, {
+                    "text": {
+                        "@": {
+                            "xml:lang": "zh-hk"
+                        },
+                        "#": "image4.jpg"
+                    }
+                },
+                "image5.jpg",
+                "image6.jpg"]
+            };
+
+            mockParsing(data);
+
+            configParser.parse(configPath, session, function (configObj) {
+                expect(configObj.splashScreens).toBeDefined();
+                expect(configObj.splashScreens.image).toBeDefined();
+                expect(configObj.splashScreens.image["default"]).toBeDefined();
+                expect(configObj.splashScreens.image["default"].length).toBe(2);
+                configObj.splashScreens.image["default"].forEach(function (img) {
+                    expect(img).toMatch(/image5\.jpg|image6\.jpg/);
+                });
+                expect(configObj.splashScreens.image["fr"]).toBeDefined();
+                expect(configObj.splashScreens.image["fr"].length).toBe(2);
+                configObj.splashScreens.image["fr"].forEach(function (img) {
+                    expect(img).toMatch(/image1\.jpg|image2\.jpg/);
+                });
+                expect(configObj.splashScreens.image["zh-hk"]).toBeDefined();
+                expect(configObj.splashScreens.image["zh-hk"].length).toBe(2);
+                configObj.splashScreens.image["zh-hk"].forEach(function (img) {
+                    expect(img).toMatch(/image3\.jpg|image4\.jpg/);
+                });
+            });
+        });
+    });
 });

@@ -143,6 +143,8 @@ describe("Native packager", function () {
                 "-buildId" + NL +
                 "100" + NL +
                 path.normalize("c:/device/Demo.bar") + NL +
+                "-barVersion" + NL +
+                "1.5" + NL +
                 "-C" + NL +
                 path.normalize("c:/src/") + NL +
                 "blackberry-tablet.xml" + NL +
