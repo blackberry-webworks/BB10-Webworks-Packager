@@ -297,4 +297,26 @@ describe("Packager Validator: validateConfig", function () {
         expect(logger.warn).toHaveBeenCalledWith(localize.translate("EXCEPTION_FEATURE_NOT_FOUND", "abc.def.ijk"));
     });
 
+    it("does not crash if user whitelists a feature with no id", function () {
+        var session = testUtilities.cloneObj(testData.session),
+        configObj = {
+            accessList: [{
+                features: [{
+                    id: "blackberry.identity",
+                    required: true,
+                    version: "1.0.0.0"
+                }, {
+                    version: "1.0.0.0",
+                    required: true,
+                }],
+                uri: "WIDGET_LOCAL",
+                allowSubDomain: true
+            }]
+        };
+
+        expect(function () {
+            packagerValidator.validateConfig(session, configObj);
+        }).not.toThrow();
+    });
+
 });
