@@ -218,7 +218,6 @@ describe("Packager Validator: validateConfig", function () {
         });
 
         packagerValidator.validateConfig(session, configObj);
-        //expecting the features list has not changed, since these APIs exist
         expect(configObj.accessList[0].features.length).toEqual(2);
         
 
@@ -244,7 +243,6 @@ describe("Packager Validator: validateConfig", function () {
 
 
         spyOn(path, "existsSync").andCallFake(function (dir) {
-            //directory containing "abc" does not exist: existsSync should return false, otherwise true
             return dir.indexOf("abc") !== -1 ? false : true;
         });
 
@@ -290,16 +288,12 @@ describe("Packager Validator: validateConfig", function () {
         spyOn(logger, "warn");
         
         spyOn(path, "existsSync").andCallFake(function (dir) {
-            //directory containing "abc" does not exist: existsSync should return false, otherwise true
             return dir.indexOf("abc") !== -1 ? false : true;
         });
 
         packagerValidator.validateConfig(session, configObj);
-        //expecting WIDGET_LOCAL features list to have the same length as before
         expect(configObj.accessList[0].features.length).toEqual(2);
-        //expecting www.cnn.com features list to have shortened by 1 since one of it's APIs does not exist
         expect(configObj.accessList[1].features.length).toEqual(1);
-        //expecting warning to be logged to console because API "abc.def.ijk" does not exist"
         expect(logger.warn).toHaveBeenCalledWith(localize.translate("EXCEPTION_FEATURE_NOT_FOUND", "abc.def.ijk"));
     });
 
