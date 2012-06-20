@@ -183,10 +183,12 @@ describe("config parser", function () {
     });
     
     it("Fails when missing feature error is not shown", function () {
-        var missingFeatureConfigPath = path.resolve("test/config-missing-feature.xml");
-       
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data.feature = {}; 
+        mockParsing(data);
+
         expect(function () {
-            configParser.parse(missingFeatureConfigPath, session, {});
+            configParser.parse(configPath, session, {});
         }).toThrow(localize.translate("EXCEPTION_INVALID_FEATURE_ID"));
     });
 
