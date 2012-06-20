@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget xmlns=" http://www.w3.org/ns/widgets"
+        xmlns:rim="http://www.blackberry.com/ns/widgets"
+        version="1.2.3"
+        id="InvokeAppCustomAction">
+    <name>InvokeAppCustomAction</name>
+    <content src="index.htm"/>
+    <author href="http://www.rim.com/" 
+            rim:copyright="no copyright, go nuts!"
+            email = "email@rim.com">
+            Research In Motion Ltd.
+    </author>
+    <description>This app tests invocation</description>
+    <rim:invoke-target id="net.rim.webworks.invoke.appcustomaction">
+        <type></type>
+        <filter>
+            <action>bb.action.CUSTOM</action>
+            <mime-type>text/*</mime-type>
+        </filter>
+    </rim:invoke-target>
+    <license href="http://www.apache.org/licenses/LICENSE-2.0">My License</license>
+    <icon src="tire.png"/>
+</widget>
+
