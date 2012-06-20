@@ -173,10 +173,12 @@ describe("config parser", function () {
     });
 
     it("Fails when missing content error is not shown", function () {
-        var missingContentConfigPath = path.resolve("test/config-missing-content.xml");
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data.content = "";
+        mockParsing(data);
         
         expect(function () {
-            configParser.parse(missingContentConfigPath, session, {});
+            configParser.parse(configPath, session, {});
         }).toThrow(localize.translate("EXCEPTION_INVALID_CONTENT"));
     });
     
