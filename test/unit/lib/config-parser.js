@@ -540,10 +540,19 @@ describe("config parser", function () {
     });
 
     it("throws and error when an invoke target xml doesn't specify an invocation type", function () {
-        var missingInvokeTypePath = path.resolve("test/config-missing-invoke-type.xml");
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["rim:invoke-target"] = {
+            "@": {
+                "id": "com.domain.subdomain.appName.app"
+            },
+            type: ""
+        };
+        
+        mockParsing(data);
+
         expect(function () {
-            configParser.parse(missingInvokeTypePath, session, {});
-        }).toThrow(localize.translate("EXCEPTION_INVOKE_TARGET_INVALID_TYPE"));    
+            configParser.parse(configPath, session, function (configObj) {});
+        }).toThrow(localize.translate("EXCEPTION_INVOKE_TARGET_INVALID_TYPE"));
     });
 
     it("throws an error when an invoke target doesn't specify an invocation type", function () {
