@@ -175,10 +175,10 @@ describe("config parser", function () {
     it("Fails when missing content error is not shown", function () {
         var missingContentConfigPath = path.resolve("test/config-missing-content.xml");
         
-        expect(function() { 
-                configParser.parse(missingContentConfigPath, session, {});
+        expect(function () {
+            configParser.parse(missingContentConfigPath, session, {});
         }).toThrow(localize.translate("EXCEPTION_INVALID_CONTENT"));
-     });
+    });
     
     it("adds local:/// protocol to urls", function () {
         var data = testUtilities.cloneObj(testData.xml2jsConfig);
