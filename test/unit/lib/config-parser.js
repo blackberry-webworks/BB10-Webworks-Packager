@@ -185,10 +185,10 @@ describe("config parser", function () {
     it("Fails when missing feature error is not shown", function () {
         var missingFeatureConfigPath = path.resolve("test/config-missing-feature.xml");
        
-        expect(function() { 
-                configParser.parse(missingFeatureConfigPath, session, {});
+        expect(function () {
+            configParser.parse(missingFeatureConfigPath, session, {});
         }).toThrow(localize.translate("EXCEPTION_INVALID_FEATURE_ID"));
-     });
+    });
 
     
     it("adds local:/// protocol to urls", function () {
