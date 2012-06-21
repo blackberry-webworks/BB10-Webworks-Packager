@@ -545,7 +545,7 @@ describe("config parser", function () {
             "@": {
                 "id": "com.domain.subdomain.appName.app"
             },
-            type: ""
+            type: {}
         };
         
         mockParsing(data);
