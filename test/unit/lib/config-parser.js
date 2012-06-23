@@ -182,6 +182,17 @@ describe("config parser", function () {
         }).toThrow(localize.translate("EXCEPTION_INVALID_CONTENT"));
     });
     
+    it("Fails when missing feature error is not shown", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data.feature = {}; 
+        mockParsing(data);
+
+        expect(function () {
+            configParser.parse(configPath, session, {});
+        }).toThrow(localize.translate("EXCEPTION_INVALID_FEATURE_ID"));
+    });
+
+    
     it("adds local:/// protocol to urls", function () {
         var data = testUtilities.cloneObj(testData.xml2jsConfig);
         data.content["@"].src = "localFile.html";
@@ -547,6 +558,22 @@ describe("config parser", function () {
         expect(function () {
             configParser.parse(configPath, session, function (configObj) {});
         }).toThrow(localize.translate("EXCEPTION_INVOKE_TARGET_INVALID_ID"));
+    });
+
+    it("throws and error when an invoke target xml doesn't specify an invocation type", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["rim:invoke-target"] = {
+            "@": {
+                "id": "com.domain.subdomain.appName.app"
+            },
+            type: {}
+        };
+        
+        mockParsing(data);
+
+        expect(function () {
+            configParser.parse(configPath, session, function (configObj) {});
+        }).toThrow(localize.translate("EXCEPTION_INVOKE_TARGET_INVALID_TYPE"));
     });
 
     it("throws an error when an invoke target doesn't specify an invocation type", function () {
