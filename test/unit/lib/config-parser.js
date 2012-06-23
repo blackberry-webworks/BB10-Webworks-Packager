@@ -646,7 +646,7 @@ describe("config parser", function () {
     });
 
     describe("splash screen", function () {
-        it("not throw error when rim:splashScreens element does not contain any image elements", function () {
+        it("throws error when rim:splashScreens element does not contain any image elements", function () {
             var data = testUtilities.cloneObj(testData.xml2jsConfig);
             data["rim:splashScreens"] = {};
 
@@ -654,7 +654,73 @@ describe("config parser", function () {
 
             expect(function () {
                 configParser.parse(configPath, session, function (configObj) {});
-            }).not.toThrow();
+            }).toThrow(localize.translate("EXCEPTION_EMPTY_SPLASH_SCREEN"));
+        });
+
+        it("throws error when rim:splashScreens contains empty image element", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:splashScreens"] = {
+                image: {}
+            };
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).toThrow(localize.translate("EXCEPTION_INVALID_IMAGE"));
+        });
+
+        it("throws error when rim:splashScreens contains empty text element", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:splashScreens"] = {
+                image: {
+                    text: {}
+                }
+            };
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).toThrow(localize.translate("EXCEPTION_INVALID_TEXT"));
+        });
+
+        it("throws error when rim:splashScreens contains text element that does not contain xml:lang attribute", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:splashScreens"] = {
+                image: {
+                    text: {
+                        "@": {
+                            "useless": "useless value"
+                        },
+                        "#": "image1.jpg"
+                    }
+                }
+            };
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).toThrow(localize.translate("EXCEPTION_INVALID_TEXT"));
+        });
+
+        it("throws error when rim:splashScreens contains image element contains nested element that is not text", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:splashScreens"] = {
+                image: {
+                    blah: {
+                        "#": "blah blah"
+                    },
+                    "#": "image1.jpg"
+                }
+            };
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).toThrow(localize.translate("EXCEPTION_INVALID_IMAGE"));
         });
 
         it("generates correct widgetConfig when there is just 1 splash screen image", function () {
@@ -756,7 +822,7 @@ describe("config parser", function () {
     });
 
     describe("icon", function () {
-        it("not throw error when rim:icon element does not contain any image elements", function () {
+        it("throws error when rim:icon element does not contain any image elements", function () {
             var data = testUtilities.cloneObj(testData.xml2jsConfig);
             data["rim:icon"] = {};
 
@@ -764,7 +830,73 @@ describe("config parser", function () {
 
             expect(function () {
                 configParser.parse(configPath, session, function (configObj) {});
-            }).not.toThrow();
+            }).toThrow(localize.translate("EXCEPTION_EMPTY_ICON"));
+        });
+
+        it("throws error when rim:icon contains empty image element", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:icon"] = {
+                image: {}
+            };
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).toThrow(localize.translate("EXCEPTION_INVALID_IMAGE"));
+        });
+
+        it("throws error when rim:icon contains empty text element", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:icon"] = {
+                image: {
+                    text: {}
+                }
+            };
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).toThrow(localize.translate("EXCEPTION_INVALID_TEXT"));
+        });
+
+        it("throws error when rim:icon contains text element that does not contain xml:lang attribute", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:icon"] = {
+                image: {
+                    text: {
+                        "@": {
+                            "useless": "useless value"
+                        },
+                        "#": "image1.jpg"
+                    }
+                }
+            };
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).toThrow(localize.translate("EXCEPTION_INVALID_TEXT"));
+        });
+
+        it("throws error when rim:icon contains image element contains nested element that is not text", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:icon"] = {
+                image: {
+                    blah: {
+                        "#": "blah blah"
+                    },
+                    "#": "image1.jpg"
+                }
+            };
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).toThrow(localize.translate("EXCEPTION_INVALID_IMAGE"));
         });
 
         it("generates correct widgetConfig when there is just 1 icon image", function () {
