@@ -28,7 +28,8 @@ module.exports = {
         },
         getParams: function () {
             return null;
-        }
+        },
+        "minify": true
     },
     config: {
         "id": 'Demo',

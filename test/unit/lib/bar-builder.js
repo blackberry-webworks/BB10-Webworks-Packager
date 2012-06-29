@@ -1,6 +1,7 @@
 var srcPath = __dirname + "/../../../lib/",
     path = require("path"),
     wrench = require("wrench"),
+    async = require("async"),
     barBuilder = require(srcPath + "bar-builder"),
     fileMgr = require(srcPath + "file-manager"),
     nativePkgr = require(srcPath + "native-packager"),
@@ -21,6 +22,11 @@ describe("BAR builder", function () {
         spyOn(fileMgr, "copyJnextDependencies");
         spyOn(fileMgr, "copyExtensions");
         spyOn(fileMgr, "generateFrameworkModulesJS");
+        spyOn(async, "series").andCallFake(function () {
+            nativePkgr.exec(session, target, config, function (code) {
+                callback(code);
+            });
+        });
         spyOn(nativePkgr, "exec").andCallFake(function (session, target, config, callback) {
             callback(0);
         });
@@ -33,6 +39,7 @@ describe("BAR builder", function () {
         expect(fileMgr.copyJnextDependencies).toHaveBeenCalledWith(session);
         expect(fileMgr.copyExtensions).toHaveBeenCalledWith(config.accessList, session, target, extManager);
         expect(fileMgr.generateFrameworkModulesJS).toHaveBeenCalledWith(session);
+        expect(async.series).toHaveBeenCalledWith([jasmine.any(Function), jasmine.any(Function)], jasmine.any(Function));
         expect(nativePkgr.exec).toHaveBeenCalledWith(session, target, config, jasmine.any(Function));
         expect(callback).toHaveBeenCalledWith(0);
     });
