@@ -17,7 +17,20 @@ var testData = require("./test-data"),
     i18nMgr = require(testData.libPath + "/i18n-manager"),
     session = testData.session,
     path = require("path"),
-    wrench = require("wrench");
+    wrench = require("wrench"),
+    pkgrUtils = require(testData.libPath + "/packager-utils");
+
+function mockOSReturnFiles(files) {
+    if (pkgrUtils.isWindows()) {
+        var newFiles = [];
+        files.forEach(function (f) {
+            newFiles.push(session.sourceDir + "\\locales\\" + f.split("/").join("\\"));
+        });
+        return newFiles;
+    } else {
+        return files;
+    }
+}
 
 describe("i18n manager", function () {
     it("generate correct metadata for icon", function () {
@@ -27,10 +40,10 @@ describe("i18n manager", function () {
             xmlObject = {};
 
         spyOn(path, "existsSync").andReturn(true);
-        spyOn(wrench, "readdirSyncRecursive").andReturn([
+        spyOn(wrench, "readdirSyncRecursive").andReturn(mockOSReturnFiles([
             'fr',
             'fr/logo.png'
-        ]);
+        ]));
 
         i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "icon");
 
@@ -75,10 +88,10 @@ describe("i18n manager", function () {
             xmlObject = {};
 
         spyOn(path, "existsSync").andReturn(true);
-        spyOn(wrench, "readdirSyncRecursive").andReturn([
+        spyOn(wrench, "readdirSyncRecursive").andReturn(mockOSReturnFiles([
             'fr',
             'fr/logo-mismatch.png'
-        ]);
+        ]));
 
         i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "icon");
 
@@ -97,10 +110,10 @@ describe("i18n manager", function () {
             xmlObject = {};
 
         spyOn(path, "existsSync").andReturn(true);
-        spyOn(wrench, "readdirSyncRecursive").andReturn([
+        spyOn(wrench, "readdirSyncRecursive").andReturn(mockOSReturnFiles([
             'fr',
             'fr/assets/images/logo.png'
-        ]);
+        ]));
 
         i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "icon");
 
@@ -127,11 +140,11 @@ describe("i18n manager", function () {
             xmlObject = {};
 
         spyOn(path, "existsSync").andReturn(true);
-        spyOn(wrench, "readdirSyncRecursive").andReturn([
+        spyOn(wrench, "readdirSyncRecursive").andReturn(mockOSReturnFiles([
             'fr',
             'fr/splash-1280x768.jpg',
             'fr/splash-768x1280.jpg'
-        ]);
+        ]));
 
         i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "splash");
 
@@ -190,11 +203,11 @@ describe("i18n manager", function () {
             xmlObject = {};
 
         spyOn(path, "existsSync").andReturn(true);
-        spyOn(wrench, "readdirSyncRecursive").andReturn([
+        spyOn(wrench, "readdirSyncRecursive").andReturn(mockOSReturnFiles([
             'fr',
             'fr/splash-1280x768-mismatch.jpg',
             'fr/splash-768x1280.jpg'
-        ]);
+        ]));
 
         i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "splash");
 
@@ -224,11 +237,11 @@ describe("i18n manager", function () {
             xmlObject = {};
 
         spyOn(path, "existsSync").andReturn(true);
-        spyOn(wrench, "readdirSyncRecursive").andReturn([
+        spyOn(wrench, "readdirSyncRecursive").andReturn(mockOSReturnFiles([
             'fr',
             'fr/assets/images/splash-1280x768.jpg',
             'fr/assets/images/splash-768x1280.jpg'
-        ]);
+        ]));
 
         i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "splash");
 
