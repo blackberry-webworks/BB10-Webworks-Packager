@@ -749,6 +749,25 @@ describe("config parser", function () {
                 configParser.parse(configPath, session, function (configObj) {});
             }).not.toThrow();
         });
+
+        it("throws error when rim:splash src starts with 'locales' subfolder", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["rim:splash"] = [{
+                    "@": {
+                        "src": "a.jpg"
+                    }
+                }, {
+                    "@": {
+                        "src": "locales/en/b.jpg"
+                    }
+                }];
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).toThrow(localize.translate("EXCEPTION_INVALID_SPLASH_SRC_LOCALES"));
+        });
     });
 
     describe("icon", function () {
@@ -827,6 +846,25 @@ describe("config parser", function () {
             expect(function () {
                 configParser.parse(configPath, session, function (configObj) {});
             }).not.toThrow();
+        });
+
+        it("throws error when icon src starts with 'locales' subfolder", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data["icon"] = [{
+                    "@": {
+                        "src": "a.jpg"
+                    }
+                }, {
+                    "@": {
+                        "src": "locales/en/b.jpg"
+                    }
+                }];
+
+            mockParsing(data);
+
+            expect(function () {
+                configParser.parse(configPath, session, function (configObj) {});
+            }).toThrow(localize.translate("EXCEPTION_INVALID_ICON_SRC_LOCALES"));
         });
     });
 });
