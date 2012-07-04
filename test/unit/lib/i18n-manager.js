@@ -135,7 +135,7 @@ describe("i18n manager", function () {
 
     it("generate correct metadata for splash", function () {
         var config = {
-                splash: ["splash-1280x768.jpg", "splash-768x1280.jpg"]
+                "rim:splash": ["splash-1280x768.jpg", "splash-768x1280.jpg"]
             },
             xmlObject = {};
 
@@ -146,7 +146,7 @@ describe("i18n manager", function () {
             'fr/splash-768x1280.jpg'
         ]));
 
-        i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "splash");
+        i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "rim:splash");
 
         expect(xmlObject.splashScreens).toBeDefined();
         expect(xmlObject.splashScreens.image).toBeDefined();
@@ -177,13 +177,13 @@ describe("i18n manager", function () {
 
     it("generate correct metadata for splash when locales folder does not exist", function () {
         var config = {
-                splash: ["splash-1280x768.jpg", "splash-768x1280.jpg"]
+                "rim:splash": ["splash-1280x768.jpg", "splash-768x1280.jpg"]
             },
             xmlObject = {};
 
         spyOn(path, "existsSync").andReturn(false);
 
-        i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "splash");
+        i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "rim:splash");
 
         expect(xmlObject.splashScreens).toBeDefined();
         expect(xmlObject.splashScreens.image).toBeDefined();
@@ -198,7 +198,7 @@ describe("i18n manager", function () {
 
     it("generate correct metadata for splash when locale folder does not contain matching image", function () {
         var config = {
-                splash: ["splash-1280x768.jpg", "splash-768x1280.jpg"]
+                "rim:splash": ["splash-1280x768.jpg", "splash-768x1280.jpg"]
             },
             xmlObject = {};
 
@@ -209,7 +209,7 @@ describe("i18n manager", function () {
             'fr/splash-768x1280.jpg'
         ]));
 
-        i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "splash");
+        i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "rim:splash");
 
         expect(xmlObject.splashScreens).toBeDefined();
         expect(xmlObject.splashScreens.image).toBeDefined();
@@ -232,7 +232,7 @@ describe("i18n manager", function () {
 
     it("generate correct metadata for splash when image is in subfolder", function () {
         var config = {
-                splash: ["assets\\images\\splash-1280x768.jpg", "assets\\images\\splash-768x1280.jpg"]
+                "rim:splash": ["assets\\images\\splash-1280x768.jpg", "assets\\images\\splash-768x1280.jpg"]
             },
             xmlObject = {};
 
@@ -243,7 +243,7 @@ describe("i18n manager", function () {
             'fr/assets/images/splash-768x1280.jpg'
         ]));
 
-        i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "splash");
+        i18nMgr.generateLocalizedMetadata(session, config, xmlObject, "rim:splash");
 
         expect(xmlObject.splashScreens).toBeDefined();
         expect(xmlObject.splashScreens.image).toBeDefined();
