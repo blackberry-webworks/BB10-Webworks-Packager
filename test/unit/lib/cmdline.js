@@ -42,17 +42,17 @@ describe("Command line", function () {
         cmd.parseOptions(["-v"]);
         expect(cmd.verbose).toBeTruthy();
     });
-    
+
     it("accepts -g with argument", function () {
         cmd.parseOptions(["-g", "myPassword"]);
         expect(cmd.password).toEqual("myPassword");
     });
-    
+
     it("accepts --buildId with argument", function () {
         cmd.parseOptions(["--buildId", "100"]);
         expect(cmd.buildId).toEqual("100");
     });
-    
+
     it("accepts -buildId with argument", function () {
         cmd.parseOptions(["-buildId", "100"]);
         expect(cmd.buildId).toEqual("100");
@@ -64,4 +64,9 @@ describe("Command line", function () {
         }).toThrow(localize.translate("EXCEPTION_CMDLINE_ARG_INVALID", "--src"));
     });
 
+    it("throws an error if the archive name is not valid", function () {
+        expect(function () {
+            require(srcPath + "cmdline").parse(["archive.zip.zip"]);
+        }).toThrow(localize.translate("EXCEPTION_INVALID_ARCHIVE", "archive.zip.zip"));
+    });
 });
