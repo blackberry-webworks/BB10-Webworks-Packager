@@ -215,10 +215,10 @@ describe("config parser", function () {
 
         spyOn(logger, "error");
         spyOn(fileManager, "cleanSource");
-
+        session.keepSource = true;
         configParser.parse(configPath, session, extManager, function () {});
-
-        expect(fileManager.cleanSource).toHaveBeenCalled();
+        expect(session.keepSource).toBe(false);
+        expect(fileManager.cleanSource).toHaveBeenCalledWith(session);
     });
 
     it("adds the access_internet permission if unprovided", function () {

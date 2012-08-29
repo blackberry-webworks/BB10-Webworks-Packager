@@ -20,8 +20,7 @@ var srcPath = __dirname + "/../../../lib/",
 
 describe("File manager", function () {
     it("prepareOutputFiles() should copy files and unzip archive", function () {
-        fileMgr.prepareOutputFiles(session);
-
+        fileMgr.prepareOutputFiles(session);        
         expect(path.existsSync(session.sourcePaths.CHROME)).toBeTruthy();
         expect(path.existsSync(session.sourcePaths.UI)).toBeTruthy();
         expect(path.existsSync(session.sourcePaths.LIB)).toBeTruthy();
@@ -212,7 +211,8 @@ describe("File manager", function () {
     it("cleanSource() should delete source folder", function () {
         expect(path.existsSync(session.sourceDir)).toBeTruthy();
         expect(fs.statSync(session.sourceDir).isDirectory()).toBeTruthy();
-        fileMgr.cleanSource(session);
+        session.keepSource = false;
+        fileMgr.cleanSource(session);        
         expect(path.existsSync(session.sourceDir)).toBeFalsy();
     });
 });
