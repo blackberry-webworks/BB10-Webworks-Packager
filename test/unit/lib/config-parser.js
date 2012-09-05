@@ -934,42 +934,38 @@ describe("config parser", function () {
         });
 
         it("sets orientation to landscape when specified", function () {
-        var data = testUtilities.cloneObj(testData.xml2jsConfig);
-        data["rim:orientation"] = {
-            "@": { mode: "landscape" }
-        };
-        
-        mockParsing(data);
-        
-        configParser.parse(configPath, session, function (configObj) {
-            expect(configObj.orientation).toEqual("landscape");
-            expect(configObj.autoOrientation).toEqual(false);
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data['feature'] = {'@': {id: 'blackberry.app.orientation'}, mode: "landscape"};
+
+            mockParsing(data);
+
+            configParser.parse(configPath, session, extManager, function (configObj) {
+                expect(configObj.orientation).toEqual("landscape");
+                expect(configObj.autoOrientation).toEqual(false);
+            });
         });
-    });
-    
-    it("sets orientation to portrait when specified", function () {
-        var data = testUtilities.cloneObj(testData.xml2jsConfig);
-        data["rim:orientation"] = {
-            "@": { mode: "portrait" }
-        };
-        
-        mockParsing(data);
-        
-        configParser.parse(configPath, session, function (configObj) {
-            expect(configObj.orientation).toEqual("portrait");
-            expect(configObj.autoOrientation).toEqual(false);
+
+        it("sets orientation to portrait when specified", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data['feature'] = {'@': {id: 'blackberry.app.orientation'}, mode: "portrait"};
+
+            mockParsing(data);
+
+            configParser.parse(configPath, session, extManager, function (configObj) {
+                expect(configObj.orientation).toEqual("portrait");
+                expect(configObj.autoOrientation).toEqual(false);
+            });
         });
-    });
-    
-    it("sets auto orientation to true by default", function () {
-        var data = testUtilities.cloneObj(testData.xml2jsConfig);
-        delete data["rim:orientation"];//Remove any orientation data
-        
-        mockParsing(data);
-        
-        configParser.parse(configPath, session, function (configObj) {
-            expect(configObj.autoOrientation).toEqual(true);
+
+        it("sets auto orientation to true by default", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            delete data["feature"];//Remove any orientation data
+
+            mockParsing(data);
+
+            configParser.parse(configPath, session, extManager, function (configObj) {
+                expect(configObj.autoOrientation).toEqual(true);
+            });
         });
-    });
     });
 });
