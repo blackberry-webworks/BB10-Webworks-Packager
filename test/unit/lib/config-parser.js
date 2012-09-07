@@ -978,7 +978,7 @@ describe("config parser", function () {
             mockParsing(data);
 
             configParser.parse(configPath, session, extManager, function (configObj) {
-                expect(configObj.backgroundColor).toEqual("0xffffff");
+                expect(configObj.backgroundColor).toEqual(16777215);//Decimal value of 0xffffff
             });
         });
     });
