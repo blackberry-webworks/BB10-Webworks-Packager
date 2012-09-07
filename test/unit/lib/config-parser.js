@@ -935,7 +935,8 @@ describe("config parser", function () {
 
         it("sets orientation to landscape when specified", function () {
             var data = testUtilities.cloneObj(testData.xml2jsConfig);
-            data['feature'] = {'@': {id: 'blackberry.app.orientation'}, mode: "landscape"};
+            data['feature'] = { '@': { id: 'blackberry.app.orientation', required: true },
+                    param: { '@': { name: 'mode', value: 'landscape' } } };
 
             mockParsing(data);
 
@@ -947,7 +948,8 @@ describe("config parser", function () {
 
         it("sets orientation to portrait when specified", function () {
             var data = testUtilities.cloneObj(testData.xml2jsConfig);
-            data['feature'] = {'@': {id: 'blackberry.app.orientation'}, mode: "portrait"};
+            data['feature'] = { '@': { id: 'blackberry.app.orientation', required: true },
+                    param: { '@': { name: 'mode', value: 'portrait' } } };
 
             mockParsing(data);
 
@@ -965,6 +967,18 @@ describe("config parser", function () {
 
             configParser.parse(configPath, session, extManager, function (configObj) {
                 expect(configObj.autoOrientation).toEqual(true);
+            });
+        });
+
+        it("sets backgroundColor when specified via blackberry.app namespace", function () {
+            var data = testUtilities.cloneObj(testData.xml2jsConfig);
+            data['feature'] = { '@': { id: 'blackberry.app', required: true },
+                    param: { '@': { name: 'backgroundColor', value: '0xffffff' } } };
+
+            mockParsing(data);
+
+            configParser.parse(configPath, session, extManager, function (configObj) {
+                expect(configObj.backgroundColor).toEqual("0xffffff");
             });
         });
     });
