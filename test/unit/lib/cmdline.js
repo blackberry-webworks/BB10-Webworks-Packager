@@ -58,6 +58,16 @@ describe("Command line", function () {
         expect(cmd.buildId).toEqual("100");
     });
 
+    it("accepts --no-minify", function () {
+        cmd.parseOptions(["--no-minify"]);
+        expect(cmd.minify).toBeFalsy();
+    });
+
+    it("accepts -d", function () {
+        cmd.parseOptions(["--debug"]);
+        expect(cmd.minify).toBeFalsy();
+    });
+
     it("throws an error for invalid multi-word arguments", function () {
         expect(function () {
             require(srcPath + "cmdline").parse(["--src"]);
