@@ -1018,7 +1018,8 @@ describe("config parser", function () {
 
         it("throws a warning when blackberry.app.orientation exists", function () {
             var data = testUtilities.cloneObj(testData.xml2jsConfig);
-            data['feature'] = { '@': { id: 'blackberry.app.orientation', required: true }};
+            data['feature'] = { '@': { id: 'blackberry.app.orientation', required: true },
+                param: { '@': { name: 'mode', value: 'portrait' } } };
 
             mockParsing(data);
 
