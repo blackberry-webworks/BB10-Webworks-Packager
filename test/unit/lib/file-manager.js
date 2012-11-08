@@ -1,6 +1,6 @@
 var srcPath = __dirname + "/../../../lib/",
     barconf = require(srcPath + "bar-conf.js"),
-    fs = require("fsext"),
+    fs = require("fs"),
     path = require("path"),
     util = require("util"),
     packager_utils = require(srcPath + "packager-utils"),
@@ -34,11 +34,10 @@ describe("File manager", function () {
 
 
     it("copyWWE() should copy wwe of the specified target", function () {
-        spyOn(fs, "copySync");
-
+        spyOn(packager_utils, "copyFile");
         fileMgr.copyWWE(session, "simulator");
 
-        expect(fs.copySync).toHaveBeenCalledWith(path.normalize(session.conf.DEPENDENCIES_BOOTSTRAP + "/wwe"), path.normalize(session.sourceDir + "/wwe"));
+        expect(packager_utils.copyFile).toHaveBeenCalledWith(path.normalize(session.conf.DEPENDENCIES_BOOTSTRAP + "/wwe"), path.normalize(session.sourceDir));
     });
 
     it("copyExtensions() should copy all .js files required by features listed in config.xml", function () {
