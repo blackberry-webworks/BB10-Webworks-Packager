@@ -27,9 +27,9 @@ describe("File manager", function () {
         spyOn(wrench, "copyDirSyncRecursive");
         fileMgr.prepareOutputFiles(session);
 
-        expect(path.existsSync(session.sourcePaths.CHROME)).toBeTruthy();
+        expect(fs.existsSync(session.sourcePaths.CHROME)).toBeTruthy();
         expect(wrench.copyDirSyncRecursive).toHaveBeenCalledWith(session.conf.DEPENDENCIES_BOOTSTRAP, session.sourcePaths.CHROME);
-        expect(path.existsSync(session.sourcePaths.LIB)).toBeTruthy();
+        expect(fs.existsSync(session.sourcePaths.LIB)).toBeTruthy();
     });
 
 
@@ -55,7 +55,7 @@ describe("File manager", function () {
             subfolderJS = path.join(apiDir, "/subfolder/myjs.js");//Sub folder js file
 
 
-        spyOn(path, "existsSync").andReturn(true);
+        spyOn(fs, "existsSync").andReturn(true);
         spyOn(wrench, "mkdirSyncRecursive");
         spyOn(packager_utils, "copyFile");
 
@@ -92,7 +92,7 @@ describe("File manager", function () {
             deviceSO = path.join(apiDir, "/device/myso.so");//device so file
 
 
-        spyOn(path, "existsSync").andReturn(true);
+        spyOn(fs, "existsSync").andReturn(true);
         spyOn(wrench, "mkdirSyncRecursive");
         spyOn(packager_utils, "copyFile");
 
@@ -119,7 +119,7 @@ describe("File manager", function () {
             accessList = testData.accessList;
 
         //When checking if client.js exists, return false
-        spyOn(path, "existsSync").andCallFake(function (mPath) {
+        spyOn(fs, "existsSync").andCallFake(function (mPath) {
             return mPath.indexOf("client.js") === -1;
         });
 
@@ -136,7 +136,7 @@ describe("File manager", function () {
             accessList = testData.accessList;
 
         //When checking if client.js exists, return false
-        spyOn(path, "existsSync").andCallFake(function (mPath) {
+        spyOn(fs, "existsSync").andCallFake(function (mPath) {
             return mPath.indexOf("index.js") === -1;
         });
 
@@ -179,7 +179,7 @@ describe("File manager", function () {
                 return false;
             }
         });
-        spyOn(path, "existsSync").andReturn(true);
+        spyOn(fs, "existsSync").andReturn(true);
         spyOn(JSON, "stringify");
         spyOn(fs, "writeFileSync");
 
@@ -230,32 +230,32 @@ describe("File manager", function () {
     });
 
     it("cleanSource() should delete source folder", function () {
-        expect(path.existsSync(session.sourceDir)).toBeTruthy();
+        expect(fs.existsSync(session.sourceDir)).toBeTruthy();
         expect(fs.statSync(session.sourceDir).isDirectory()).toBeTruthy();
         fileMgr.cleanSource(session);
-        expect(path.existsSync(session.sourceDir)).toBeFalsy();
+        expect(fs.existsSync(session.sourceDir)).toBeFalsy();
     });
 
     it("prepareOutputFiles() should copy files if a folder is sent in", function () {
         spyOn(wrench, "copyDirSyncRecursive");
         fileMgr.prepareOutputFiles(session);
 
-        expect(path.existsSync(session.sourcePaths.CHROME)).toBeTruthy();
+        expect(fs.existsSync(session.sourcePaths.CHROME)).toBeTruthy();
         expect(wrench.copyDirSyncRecursive).toHaveBeenCalledWith(session.conf.DEPENDENCIES_BOOTSTRAP, session.sourcePaths.CHROME);
-        expect(path.existsSync(session.sourcePaths.LIB)).toBeTruthy();
+        expect(fs.existsSync(session.sourcePaths.LIB)).toBeTruthy();
     });
 
     it("prepareOutputFiles() should copy files if a folder is sent in without .bbwpignore", function () {
-        var oldPathExistsSync = path.existsSync;
-        spyOn(path, "existsSync").andCallFake(function (ipath) {
+        var oldPathExistsSync = fs.existsSync;
+        spyOn(fs, "existsSync").andCallFake(function (ipath) {
             return path.basename(ipath) === conf.BBWP_IGNORE_FILENAME ? false : oldPathExistsSync(ipath);
         });
         spyOn(wrench, "copyDirSyncRecursive");
         fileMgr.prepareOutputFiles(session);
 
-        expect(path.existsSync(session.sourcePaths.CHROME)).toBeTruthy();
+        expect(fs.existsSync(session.sourcePaths.CHROME)).toBeTruthy();
         expect(wrench.copyDirSyncRecursive).toHaveBeenCalledWith(session.conf.DEPENDENCIES_BOOTSTRAP, session.sourcePaths.CHROME);
-        expect(path.existsSync(session.sourcePaths.LIB)).toBeTruthy();
+        expect(fs.existsSync(session.sourcePaths.LIB)).toBeTruthy();
     });
 
     it("prepareOutputFiles() should throw an error if the archive path doesn't exist", function () {

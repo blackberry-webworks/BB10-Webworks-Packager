@@ -42,7 +42,7 @@ function loadModule(module) {
 describe("Extension manager", function () {
 
     beforeEach(function () {
-        spyOn(path, "existsSync").andReturn(true);
+        spyOn(fs, "existsSync").andReturn(true);
         spyOn(fs, "readdirSync").andReturn(["app", "event", "system", "identity", "complex"]);
         spyOn(packagerUtils, "loadModule").andCallFake(loadModule);
 
