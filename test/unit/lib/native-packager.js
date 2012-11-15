@@ -215,6 +215,17 @@ describe("Native packager", function () {
         nativePkgr.exec(session, target, config, callback);
     });
 
+    it("can process packageLocale", function () {
+        var config = testUtils.cloneObj(testData.config);
+        config.packageLocale = "de,en-US,fr-CA";
+
+        spyOn(pkgrUtils, "writeFile").andCallFake(function (fileLocation, fileName, fileData) {
+            expect(fileData).toContain('<packageLocale>de,en-US,fr-CA</packageLocale>');
+        });
+
+        nativePkgr.exec(session, target, config, callback);
+    });
+
     it("can process permissions with no attributes", function () {
         var config = testUtils.cloneObj(testData.config);
         config.permissions = ['read_device_identifying_information'];

@@ -248,6 +248,181 @@ describe("config parser", function () {
         });
     });
 
+    it("packageLocale: Parses no defaultloacle and no name or descirption", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("en");
+        });
+    });
+
+    it("packageLocale: Parses with defaultloacle and no name or descirption", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["@"].defaultlocale = "de";
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("de");
+        });
+    });
+
+    it("packageLocale: No default and single name element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data.name = { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } };
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("en-US");
+        });
+    });
+
+    it("packageLocale: No default and multi name element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data.name = ['API Smoke Test',
+            { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } },
+            { '#': 'FR VALUE', '@': { 'xml:lang': 'fr-CA' } }
+        ];
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("en-US,fr-CA");
+        });
+    });
+
+    it("packageLocale: Has default and single name element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["@"].defaultlocale = "de";
+        data.name = { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } };
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("de,en-US");
+        });
+    });
+
+    it("packageLocale: Has default and multi name element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["@"].defaultlocale = "de";
+        data.name = ['API Smoke Test',
+            { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } },
+            { '#': 'FR VALUE', '@': { 'xml:lang': 'fr-CA' } }
+        ];
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("de,en-US,fr-CA");
+        });
+    });
+
+    it("packageLocale: Has default with same value in multi name element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["@"].defaultlocale = "fr-CA";
+        data.name = ['API Smoke Test',
+            { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } },
+            { '#': 'FR VALUE', '@': { 'xml:lang': 'fr-CA' } }
+        ];
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("fr-CA,en-US");
+        });
+    });
+
+    it("packageLocale: No default and single description element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data.description = { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } };
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("en-US");
+        });
+    });
+
+    it("packageLocale: No default and multi description element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data.description = ['API Smoke Test',
+            { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } },
+            { '#': 'FR VALUE', '@': { 'xml:lang': 'fr-CA' } }
+        ];
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("en-US,fr-CA");
+        });
+    });
+
+    it("packageLocale: Has default and single description element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["@"].defaultlocale = "de";
+        data.description = { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } };
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("de,en-US");
+        });
+    });
+
+    it("packageLocale: Has default and multi description element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["@"].defaultlocale = "de";
+        data.description = ['API Smoke Test',
+            { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } },
+            { '#': 'FR VALUE', '@': { 'xml:lang': 'fr-CA' } }
+        ];
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("de,en-US,fr-CA");
+        });
+    });
+
+    it("packageLocale: Has default with same value in multi description element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["@"].defaultlocale = "fr-CA";
+        data.description = ['API Smoke Test',
+            { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } },
+            { '#': 'FR VALUE', '@': { 'xml:lang': 'fr-CA' } }
+        ];
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("fr-CA,en-US");
+        });
+    });
+
+    it("packageLocale: Has default with multi name and description element", function () {
+        var data = testUtilities.cloneObj(testData.xml2jsConfig);
+        data["@"].defaultlocale = "fr-CA";
+        data.name = ['API Smoke Test',
+            { '#': 'EN VALUE', '@': { 'xml:lang': 'en-US' } },
+            { '#': 'FR VALUE', '@': { 'xml:lang': 'fr-CA' } },
+            { '#': 'FR VALUE', '@': { 'xml:lang': 'de' } }
+        ];
+        data.description = ['API Smoke Test',
+            { '#': 'EN VALUE', '@': { 'xml:lang': 'en-GB' } },
+            { '#': 'FR VALUE', '@': { 'xml:lang': 'fr-CA' } }
+        ];
+
+        mockParsing(data);
+
+        configParser.parse(configPath, session, extManager, function (configObj) {
+            expect(configObj.packageLocale).toEqual("fr-CA,en-US,de,en-GB");
+        });
+    });
+
     it("Fails when missing content error is not shown", function () {
         var data = testUtilities.cloneObj(testData.xml2jsConfig);
         data.content = "";
