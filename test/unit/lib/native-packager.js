@@ -127,6 +127,7 @@ describe("Native packager", function () {
             "<env value=\"8\" var=\"WEBKIT_NUMBER_OF_BACKINGSTORE_TILES\"></env>" +
             "<permission system=\"true\">run_native</permission>" +
             "<permission system=\"false\">access_internet</permission>" +
+            "<buildId>1</buildId>" +
             "<description>" + config.description + "</description></qnx>",
             cmd = path.normalize(session.conf.DEPENDENCIES_TOOLS + "/bin/blackberry-nativepackager" + (pkgrUtils.isWindows() ? ".bat" : ""));
 
@@ -145,6 +146,17 @@ describe("Native packager", function () {
 
         spyOn(pkgrUtils, "writeFile").andCallFake(function (fileLocation, fileName, fileData) {
             expect(fileData).toContain("<permission>read_device_identifying_information</permission>");
+        });
+
+        nativePkgr.exec(session, target, config, callback);
+
+    });
+
+    it("can generate buildId if not specified", function () {
+        var config = testUtils.cloneObj(testData.config);
+
+        spyOn(pkgrUtils, "writeFile").andCallFake(function (fileLocation, fileName, fileData) {
+            expect(fileData).toContain("<buildId>1</buildId>");
         });
 
         nativePkgr.exec(session, target, config, callback);
